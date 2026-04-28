@@ -1,8 +1,8 @@
 <div class="content_container">
   @if (devices().length !== 0) {
     <div class="content_devices">
-      <mat-grid-list cols="3" rowHeight="280px" gutterSize="12px">
-        <mat-grid-tile>
+      <mat-grid-list cols="4" rowHeight="280px" gutterSize="12px">
+        <mat-grid-tile [rowspan]="0.5">
           <div class="box">
             <div class="box_header">
               <h3 class="box_title">Devices online</h3>
@@ -10,7 +10,7 @@
             <h1>{{ devicesOnline() }}</h1>
           </div>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile [rowspan]="0.5">
           <div class="box">
             <div class="box_header">
               <h3 class="box_title">Devices offline</h3>
@@ -18,7 +18,7 @@
             <h1>{{ devices().length - devicesOnline() }}</h1>
           </div>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile [rowspan]="0.5">
           <div class="box">
             <div class="box_header">
               <h3 class="box_title">Average Value</h3>
@@ -27,7 +27,11 @@
           </div>
         </mat-grid-tile>
         @for (device of devices(); track device.id) {
-          <mat-grid-tile [routerLink]="['/devices', device.id]">
+          <mat-grid-tile
+            [routerLink]="['/devices', device.id]"
+            [rowspan]="device.id === 7 || device.id === 9 ? 1 : 2"
+            [colspan]="device.id === 7 || device.id === 9 ? 2 : 2"
+          >
             <mat-card class="device_card">
               <mat-card-header>
                 <mat-card-title>{{ device.name }}</mat-card-title>
@@ -38,7 +42,8 @@
                 >
               </mat-card-header>
               <mat-card-content>
-                <h1 class="device_card_value">{{ device.value }}</h1>
+                <!-- <h1 class="device_card_value">{{ device.value }}</h1> -->
+                <app-widget [device]="device"></app-widget>
               </mat-card-content>
             </mat-card>
           </mat-grid-tile>

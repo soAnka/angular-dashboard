@@ -9,13 +9,20 @@ import {
   MatCardContent,
 } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { ChartComponent } from '../chart/chart.component';
+import { WidgetComponent } from '../widget/widget.component';
 
+export interface IWidget {
+  widgetType: string;
+  chartType: 'line' | 'bar';
+}
 export interface IDevice {
   id: number;
   name: string;
   status: string;
   value: number;
   color: string;
+  widget: IWidget;
 }
 @Component({
   selector: 'app-devices',
@@ -29,6 +36,8 @@ export interface IDevice {
     MatCardTitle,
     MatCardContent,
     MatChipsModule,
+    ChartComponent,
+    WidgetComponent,
   ],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss',
