@@ -9,6 +9,7 @@ import {
 import { Chart, registerables } from 'chart.js';
 import { IDevice } from '../devices/devices.component';
 import { SharedStateService } from 'src/app/services/shared-state.service';
+import { SocketService } from 'src/app/services/socket.service';
 
 Chart.register(...registerables);
 
@@ -23,17 +24,20 @@ export class ChartComponent {
   state = inject(SharedStateService);
   devices: IDevice[] = this.state.devices();
   chart!: Chart;
-  history = [2];
   @Input() name: string = '';
   @Input() device!: IDevice;
   @ViewChild('chartCanvas') canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor() {
-    console.log('component created');
+  constructor(private socket: SocketService) {
     effect(() => {
-      if (!this.devices) return;
-      this.history = [...this.history, this.device.value];
-      this.updateChart();
+      const devices = this.socket.devices();
+      const d = devices.find((x) => x.id === this.device.id);
+
+      if (!this.chart || !d) return;
+
+      this.chart.data.datasets[0].data = [...d.widget.data];
+      this.chart.data.datasets[0].borderColor = d.color;
+      this.chart.update();
     });
   }
 
@@ -42,11 +46,11 @@ export class ChartComponent {
     console.log('device:', this.device);
 
     if (!this.device) return;
+    if (this.device.widget.widgetType !== 'chart') return;
+
     this.chart = new Chart(this.canvas.nativeElement, {
-      type:
-        this.device.widget.widgetType === 'chart'
-          ? this.device.widget.chartType
-          : 'bar',
+      type: this.device.widget.chartType,
+
       data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         datasets: [
@@ -73,9 +77,9 @@ export class ChartComponent {
 
   updateChart() {
     if (!this.chart) return;
-    this.chart.data.datasets[0].data = this.history;
+    this.chart.data.datasets[0].data = [...this.device.widget.data];
     this.chart.data.datasets[0].borderColor = this.device.color;
 
-    this.chart.update();
+    this.chart.update('active');
   }
 }

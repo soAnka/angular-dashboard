@@ -11,18 +11,30 @@ import {
 import { MatChipsModule } from '@angular/material/chips';
 import { ChartComponent } from '../chart/chart.component';
 import { WidgetComponent } from '../widget/widget.component';
+import { SocketService } from 'src/app/services/socket.service';
 
-export interface IWidget {
-  widgetType: string;
+export type IWidgetInfo = {
+  widgetType: 'info';
+  value: number;
+  description: string;
+};
+
+export type IWidgetTable = {
+  widgetType: 'table';
+  data: number[];
+};
+export type IWidgetChart = {
+  widgetType: 'chart';
   chartType: 'line' | 'bar';
-}
+  data: number[];
+};
 export interface IDevice {
   id: number;
   name: string;
   status: string;
   value: number;
   color: string;
-  widget: IWidget;
+  widget: IWidgetChart | IWidgetTable;
 }
 @Component({
   selector: 'app-devices',
@@ -44,9 +56,17 @@ export interface IDevice {
 })
 export class DevicesComponent {
   state = inject(SharedStateService);
-  devices = this.state.devices;
-  devicesOnline = this.state.onlineDevices;
-  devicesAvg = this.state.avgVal;
+  devices = this.socketService.devices;
+  // devices = this.state.devices;
 
-  constructor() {}
+  // devicesOnline = this.state.onlineDevices;
+  // devicesAvg = this.state.avgVal;
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    this.socketService.disconnect();
+  }
+  constructor(private socketService: SocketService) {
+    this.socketService.connect();
+  }
 }
