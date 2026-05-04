@@ -1,9 +1,9 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IDevice } from '../devices/devices.component';
 import { DevicesService } from 'src/app/services/devices.service';
 import { SharedStateService } from 'src/app/services/shared-state.service';
 import { Chart, registerables } from 'chart.js';
+import { IDevice } from 'src/app/models/idevices';
 Chart.register(...registerables);
 
 @Component({

@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { IDevice } from '../devices/devices.component';
 
 @Component({
   selector: 'app-table',
@@ -10,5 +9,5 @@ import { IDevice } from '../devices/devices.component';
 })
 export class TableComponent {
   @Input() name: string = '';
-  @Input() device!: IDevice;
+  // @Input() device!: IDevice;
 }

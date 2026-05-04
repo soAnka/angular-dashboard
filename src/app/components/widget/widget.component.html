@@ -1,6 +1,20 @@
-<ng-container
+<!-- <ng-container
   *ngComponentOutlet="
     widgetMap[device.widget.widgetType];
     inputs: { device: device }
   "
-></ng-container>
+></ng-container> -->
+
+<p>widget</p>
+<!-- <ng-container [ngSwitch]="device.widget.widgetType">
+  <app-chart
+    *ngSwitchCase="'chart'"
+    [device]="device"
+    [widget]="device.widget"
+  ></app-chart>
+  <app-info
+    *ngSwitchCase="'info'"
+    [device]="device"
+    [widget]="device.widget"
+  ></app-info>
+</ng-container> -->

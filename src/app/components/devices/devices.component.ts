@@ -13,29 +13,12 @@ import { ChartComponent } from '../chart/chart.component';
 import { WidgetComponent } from '../widget/widget.component';
 import { SocketService } from 'src/app/services/socket.service';
 
-export type IWidgetInfo = {
-  widgetType: 'info';
-  value: number;
-  description: string;
-};
+// export interface IWidget {
+//   widgetId: number;
+//   type: 'chart' | 'info';
+//   chartType?: 'line'
+// }
 
-export type IWidgetTable = {
-  widgetType: 'table';
-  data: number[];
-};
-export type IWidgetChart = {
-  widgetType: 'chart';
-  chartType: 'line' | 'bar';
-  data: number[];
-};
-export interface IDevice {
-  id: number;
-  name: string;
-  status: string;
-  value: number;
-  color: string;
-  widget: IWidgetChart | IWidgetTable;
-}
 @Component({
   selector: 'app-devices',
   standalone: true,
@@ -57,10 +40,29 @@ export interface IDevice {
 export class DevicesComponent {
   state = inject(SharedStateService);
   devices = this.socketService.devices;
-  // devices = this.state.devices;
+  layputColumns: Record<number, number> = {
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 2,
+    8: 2,
+    9: 2,
+  };
+  layputRowspan: Record<number, number> = {
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 2,
+    9: 1,
+  };
 
-  // devicesOnline = this.state.onlineDevices;
-  // devicesAvg = this.state.avgVal;
   ngOnInit() {}
 
   ngOnDestroy() {

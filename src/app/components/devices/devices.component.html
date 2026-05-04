@@ -27,24 +27,27 @@
           </div>
         </mat-grid-tile> -->
         @for (device of devices(); track device.id) {
+          <!-- widgetMap[device.widget.widgetType];
+    inputs: { device: device } -->
           <mat-grid-tile
             [routerLink]="['/devices', device.id]"
-            [rowspan]="device.id === 7 || device.id === 9 ? 1 : 2"
-            [colspan]="device.id === 7 || device.id === 9 ? 2 : 2"
+            [rowspan]="layputRowspan[device.id]"
+            [colspan]="layputColumns[device.id]"
           >
             <mat-card class="device_card">
               <mat-card-header>
                 <mat-card-title>{{ device.name }}</mat-card-title>
-                <mat-chip
-                  [class.online]="device.status === 'online'"
-                  [class.offline]="device.status !== 'online'"
-                  >{{ device.status }}</mat-chip
-                >
+                @if (device.status) {
+                  <mat-chip
+                    [class.online]="device.status === 'online'"
+                    [class.offline]="device.status !== 'online'"
+                    >{{ device.status }}</mat-chip
+                  >
+                }
               </mat-card-header>
-              <mat-card-content>
-                <!-- <h1 class="device_card_value">{{ device.value }}</h1> -->
+              <!-- <mat-card-content>
                 <app-widget [device]="device"></app-widget>
-              </mat-card-content>
+              </mat-card-content> -->
             </mat-card>
           </mat-grid-tile>
         }
