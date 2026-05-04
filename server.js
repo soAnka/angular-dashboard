@@ -17,33 +17,35 @@ const io = new Server(server, {
 
 let widgets = [
   {
+    widgetType: "chart",
     widgetId: 3,
     deviceId: 3,
     color: "blue",
     widget: {
-      widgetType: "chart",
       chartType: "line",
       data: [1],
       dataLabels: ["idle", "low", "medium", "high"],
+      color: "blue",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 4,
     deviceId: 4,
     color: "#CB2454",
     widget: {
-      widgetType: "chart",
       chartType: "line",
       data: [2],
       dataLabels: ["Start", "Ramp", "Peak", "Cooldown"],
+      color: "#CB2454",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 5,
     deviceId: 5,
     color: "#6A0AC7",
     widget: {
-      widgetType: "chart",
       chartType: "bar",
       data: [4, 8, 3, 6, 10, 5, 3, 8, 10, 12, 4, 5],
       dataLabels: [
@@ -60,50 +62,55 @@ let widgets = [
         "11h",
         "12h",
       ],
+      color: "#6A0AC7",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 6,
     deviceId: 6,
     color: "#3169E6",
     widget: {
-      widgetType: "chart",
       chartType: "doughnut",
       data: [1],
       dataLabels: ["online", "offline", "all"],
+      color: "#3169E6",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 7,
     deviceId: 7,
-    name: "Door Activity",
-    status: "online",
-    value: 10.5,
     color: "#31C6E6",
     widget: {
-      widgetType: "chart",
       chartType: "line",
-      data: [10.5],
+      data: [10.5, 5.2],
       dataLabels: ["Closed", "Opening", "Open", "Closing"],
+      color: "#31C6E6",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 8,
     deviceId: 8,
     color: "purple",
     widget: {
-      widgetType: "chart",
+      chartType: "line",
+      data: [10.5, 5.2, 2, 8],
+      dataLabels: ["Closed", "Opening", "Open", "Closing"],
+      color: "purple",
     },
   },
   {
+    widgetType: "chart",
     widgetId: 9,
     deviceId: 9,
     color: "teal",
     widget: {
-      widgetType: "chart",
       chartType: "line",
-      data: [4.35],
+      data: [4.35, 5.2, 6, 2],
       dataLabels: ["Dawn", "Morning", "Noon", "Evening"],
+      color: "teal",
     },
   },
 ];
@@ -152,44 +159,6 @@ let devices = [
   },
 ];
 
-const updateWidget = {
-  chart: (d) => {
-    let status = d.status;
-    if (status === "offline") {
-      if (Math.random() < 0.6) status = "online";
-    } else {
-      if (Math.random() < 0.2) {
-        status = "offline";
-      }
-    }
-    const mr = (Math.random() - 0.5) * 10;
-    const val =
-      status === "offline"
-        ? 0
-        : Math.max(-20, Math.min(20, +(d.value + mr).toFixed(2)));
-
-    return {
-      ...d,
-      status,
-      value: val,
-      widget: {
-        ...d.widget,
-        data:
-          status === "online"
-            ? [...d.widget.data, val].slice(-20)
-            : [...d.widget.data.slice(-20)],
-      },
-    };
-  },
-  table: (d) => {
-    const val = Math.max(0, +(d.value + (Math.random() - 0.5)).toFixed(2));
-    return {
-      ...d,
-      value: val,
-    };
-  },
-};
-
 app.get("/api/devices", (req, res) => {
   res.json({ devices, widgets });
 });
@@ -227,7 +196,7 @@ setInterval(() => {
   });
 
   widgets = widgets.map((w) => {
-    if (w.widget.widgetType !== "chart") return w;
+    if (w.widgetType !== "chart") return w;
     const device = devices.find((d) => d.id === w.deviceId);
     if (!device) return w;
 
@@ -237,7 +206,7 @@ setInterval(() => {
       ...w,
       widget: {
         ...w.widget,
-        data: [...(w.widget.data || []), val].slice(-20),
+        data: [...w.widget.data, val],
       },
     };
   });

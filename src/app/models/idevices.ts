@@ -1,4 +1,5 @@
 export type BaseWidget = {
+  widgetType: 'chart' | 'info';
   widgetId: number;
   deviceId: number;
   color: string;
@@ -13,15 +14,15 @@ export interface IDevice {
 }
 
 export type IWidgetInfo = BaseWidget & {
-  widgetType: 'info';
+  //   widgetType: 'info';
   kpiType: string;
 };
 
 export type IWidgetChart = BaseWidget & {
-  widgetType: 'chart';
   chartType: 'line' | 'bar' | 'doughnut';
   data: number[];
   dataLabels: string[];
+  color: string;
 };
 
 export type DeviceStatus = {

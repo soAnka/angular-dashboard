@@ -5,16 +5,8 @@
   "
 ></ng-container> -->
 
-<p>widget</p>
-<!-- <ng-container [ngSwitch]="device.widget.widgetType">
-  <app-chart
-    *ngSwitchCase="'chart'"
-    [device]="device"
-    [widget]="device.widget"
-  ></app-chart>
-  <app-info
-    *ngSwitchCase="'info'"
-    [device]="device"
-    [widget]="device.widget"
-  ></app-info>
-</ng-container> -->
+<!-- <p>widget</p> -->
+<ng-container [ngSwitch]="widget.widgetType">
+  <app-chart *ngSwitchCase="'chart'" [widgetID]="widget.widgetId"></app-chart>
+  <!-- <app-chart *ngSwitchCase="'info'" [widgetID]="widget.widgetId"></app-chart> -->
+</ng-container>

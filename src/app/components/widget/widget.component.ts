@@ -19,7 +19,7 @@ import { IDevice } from 'src/app/models/idevices';
   styleUrl: './widget.component.scss',
 })
 export class WidgetComponent {
-  // @Input() device!: any;
+  @Input() widget!: any;
   // widgetMap: Record<string, any> = {
   //   chart: ChartComponent,
   //   table: TableComponent,

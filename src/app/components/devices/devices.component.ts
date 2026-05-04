@@ -40,6 +40,7 @@ import { SocketService } from 'src/app/services/socket.service';
 export class DevicesComponent {
   state = inject(SharedStateService);
   devices = this.socketService.devices;
+  widgets = this.socketService.widgets;
   layputColumns: Record<number, number> = {
     1: 1,
     2: 1,

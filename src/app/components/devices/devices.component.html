@@ -45,9 +45,13 @@
                   >
                 }
               </mat-card-header>
-              <!-- <mat-card-content>
-                <app-widget [device]="device"></app-widget>
-              </mat-card-content> -->
+              @for (widget of widgets(); track widget.widgetId) {
+                @if (widget.deviceId === device.id) {
+                  <mat-card-content>
+                    <app-widget [widget]="widget"></app-widget>
+                  </mat-card-content>
+                }
+              }
             </mat-card>
           </mat-grid-tile>
         }
