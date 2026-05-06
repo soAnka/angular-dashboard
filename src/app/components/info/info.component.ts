@@ -11,7 +11,7 @@ import {
 } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { WidgetComponent } from '../widget/widget.component';
-import { IDevice, IWidgetInfo } from 'src/app/models/idevices';
+import { IDevice } from 'src/app/models/idevices';
 
 @Component({
   selector: 'app-info',
@@ -32,7 +32,6 @@ import { IDevice, IWidgetInfo } from 'src/app/models/idevices';
 export class InfoComponent {
   state = inject(SharedStateService);
   // devices: IDevice[] = this.state.devices();
-  @Input() widget!: IWidgetInfo;
   @Input() name: string = '';
   @Input() device!: IDevice;
   previousOnline = 0;

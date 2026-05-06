@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { BaseWidget, IWidgetChart } from 'src/app/models/idevices';
-import { SharedStateService } from 'src/app/services/shared-state.service';
 import { SocketService } from 'src/app/services/socket.service';
 
 Chart.register(...registerables);
@@ -27,7 +26,7 @@ export class ChartComponent {
   chart!: Chart;
   @Input() widgetID!: number;
   @Input() name: string = '';
-  // @Input() widget!: Iwidget;
+
   @ViewChild('chartCanvas') canvas!: ElementRef<HTMLCanvasElement>;
   widget = computed(() =>
     this.state
@@ -37,73 +36,74 @@ export class ChartComponent {
 
   constructor(private socket: SocketService) {
     effect(() => {
-      const widgets = this.socket.widgets();
-      // if (!this.widget()) return;
-      // if (!this.chart) return;
+      const w = this.widget();
+      console.log('single widget data ', w.widget.data);
       if (this.widget().widget.chartType === 'doughnut') {
-        const online = widgets.filter((d) => d.status === 'online').length;
-        const offline = widgets.length - online;
         this.chart.data = {
-          labels: ['Online', 'Offline'],
+          labels: ['Online', 'Offline', 'All'],
           datasets: [
             {
-              data: [online, offline],
-              backgroundColor: ['#14C886', '#A7E9D1'],
-              borderColor: ['#14C886', '#A7E9D1'],
+              data: [
+                this.doughnutwidgetsData()[0],
+                this.doughnutwidgetsData()[1],
+                this.socket.devices().length,
+              ],
+              backgroundColor: ['#83CA33', '#CBCBCB'],
+              borderColor: ['#83CA33', '#CBCBCB'],
             },
           ],
         };
         this.chart.update('active');
         return;
       }
-      // const w = widgets.find((x) => x.widgetId === this.widget.widgetId);
-      if (!this.widget()) return;
-      this.chart.data.labels = this.widget().widget.dataLabels;
-      this.chart.data.datasets[0].data = this.widget().widget.data;
-      this.chart.data.datasets[0].borderColor = this.widget().color;
-      this.chart.data.datasets[0].backgroundColor = this.widget().color;
-      if (this.widget().widget.chartType == 'bar') {
-        this.chart.data.datasets[0].backgroundColor = this.widget().color;
-      }
-      this.chart.update();
+      this.updateChart(w);
     });
   }
   doughnutwidgetsData = computed(() => {
-    const widgets = this.socket.widgets();
+    const devices = this.socket.devices();
     return [
-      widgets.filter((d) => d.status === 'online').length,
-      widgets.filter((d) => d.status === 'offline').length,
+      devices.filter((d) => d.status === 'online').length,
+      devices.filter((d) => d.status === 'offline').length,
     ];
   });
   ngAfterViewInit() {
-    console.log('gg');
-    // const widgets = this.socket.widgets();
-
-    console.log('canvas:', this.canvas);
-    // console.log('widget:', this.widget());
     if (!this.widget()) return;
     const isLineChart = this.widget().widget.chartType === 'line';
+    const isDoughnut =
+      this.widget().widget.chartType === 'doughnut' ? true : false;
+    const isBar = this.widget().widget.chartType === 'bar' ? true : false;
     this.chart = new Chart(this.canvas.nativeElement, {
-      type: this.widget().widget.chartType,
+      type: isLineChart ? 'line' : this.widget().widget.chartType,
       data: {
         labels: this.widget().widget.dataLabels,
-        datasets: [
-          {
-            label: 'Todo',
-            backgroundColor: this.widget().color,
-            data: this.widget().widget.data,
-            borderWidth: 1,
-            borderColor: this.widget().color,
-            borderRadius: 1,
-            pointRadius: isLineChart ? 2 : 0,
-            pointHoverRadius: isLineChart ? 2 : 0,
-            pointBackgroundColor: isLineChart ? this.widget().color : undefined,
-          },
-        ],
+        datasets: this.widget().widget.datasets
+          ? this.widget().widget.datasets
+          : [
+              {
+                label: 'Todo',
+                backgroundColor: this.widget().color,
+                data: this.widget().widget.data,
+                borderWidth: 1,
+                borderColor: this.widget().color,
+                borderRadius: 1,
+                pointRadius: isLineChart ? 2 : 0,
+                pointHoverRadius: isLineChart ? 2 : 0,
+                pointBackgroundColor: isLineChart
+                  ? this.widget().color
+                  : undefined,
+              },
+            ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        barPercentage: isBar ? 0.25 : 0,
+        borderRadius: isBar ? 15 : 0,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
         elements: {
           point: {
             radius: isLineChart ? 1 : 0,
@@ -111,37 +111,53 @@ export class ChartComponent {
         },
         scales: {
           x: {
+            display: !isDoughnut,
             min: 0,
             max: 20,
+            grid: {
+              display: !isDoughnut,
+            },
           },
           y: {
+            display: !isDoughnut,
             min: -30,
             max: 30,
             beginAtZero: true,
+            grid: {
+              display: !isDoughnut,
+            },
           },
         },
       },
     });
   }
-  updateChart() {
-    // const widgets = this.socket.widgets();
-    // const d: any = widgets.find((x) => x.widgetId === this.widget().widgetId);
-    if (!this.chart || !this.widget()) return;
-    this.chart.data.datasets[0].data = this.widget().widget.data;
-    this.chart.data.datasets[0].borderColor = this.widget().color;
-    this.chart.data.datasets[0].backgroundColor = this.widget().color;
-    // this.chart.data.labels =
-    //   this.widget().widget.widgetType === 'chart'
-    //     ? this.widget().widget.dataLabels
-    //     : [];
-    if (this.widget().widget.chartType === 'bar') {
-      this.chart.data.datasets[0].backgroundColor = [
-        'rgb(25,160,120)',
-        'rgb(25,100,115)',
-        'rgb(25,110,220)',
-        'rgb(25,150,220)',
-      ];
+  updateChart(w: BaseWidget | IWidgetChart) {
+    if (!w || !this.chart) return;
+
+    this.chart.data.labels = w.widget.dataLabels;
+
+    if (w.widget.datasets) {
+      this.chart.data.datasets = w.widget.datasets.map((ds: any) => ({
+        label: ds.label,
+        data: ds.data,
+        borderWidth: 1,
+        borderColor: ds.borderColor,
+        backgroundColor: ds.borderColor,
+        fill: false,
+      }));
+    } else {
+      if (!this.chart.data.datasets.length) return;
+      const ds = this.chart.data.datasets[0];
+      ds.data = w.widget.data;
+      ds.borderWidth = 1;
+      ds.borderColor = w.color;
+      ds.backgroundColor = w.color;
+      if (w.widget.chartType === 'bar') {
+        ds.backgroundColor = w.color;
+        ds.data = [...w.widget.data];
+        this.chart.data.labels = w.widget.dataLabels;
+      }
     }
-    this.chart.update('active');
+    this.chart.update();
   }
 }

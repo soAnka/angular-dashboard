@@ -1,12 +1,3 @@
-<!-- <ng-container
-  *ngComponentOutlet="
-    widgetMap[device.widget.widgetType];
-    inputs: { device: device }
-  "
-></ng-container> -->
-
-<!-- <p>widget</p> -->
 <ng-container [ngSwitch]="widget.widgetType">
   <app-chart *ngSwitchCase="'chart'" [widgetID]="widget.widgetId"></app-chart>
-  <!-- <app-chart *ngSwitchCase="'info'" [widgetID]="widget.widgetId"></app-chart> -->
 </ng-container>

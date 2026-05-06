@@ -18,20 +18,25 @@ const io = new Server(server, {
 let widgets = [
   {
     widgetType: "chart",
-    widgetId: 3,
-    deviceId: 3,
+    widgetId: 1,
+    deviceId: 1,
     color: "blue",
     widget: {
       chartType: "line",
-      data: [1],
       dataLabels: ["idle", "low", "medium", "high"],
-      color: "blue",
+      datasets: [
+        {
+          label: "Vacuum Power Usage",
+          data: [10.5, -8.2, 8, 6],
+          borderColor: "blue",
+        },
+      ],
     },
   },
   {
     widgetType: "chart",
-    widgetId: 4,
-    deviceId: 4,
+    widgetId: 2,
+    deviceId: 8,
     color: "#CB2454",
     widget: {
       chartType: "line",
@@ -42,12 +47,18 @@ let widgets = [
   },
   {
     widgetType: "chart",
-    widgetId: 5,
-    deviceId: 5,
+    widgetId: 3,
+    deviceId: 3,
     color: "#6A0AC7",
     widget: {
       chartType: "bar",
-      data: [4, 8, 3, 6, 10, 5, 3, 8, 10, 12, 4, 5],
+      datasets: [
+        {
+          // label: "Solar Input",
+          data: [24, -8, 23, 16, -10, 15, 26, 18, 25, 18, 10, -15, 12, 15, 8],
+          borderColor: "#6A0AC7",
+        },
+      ],
       dataLabels: [
         "1h",
         "2h",
@@ -61,14 +72,17 @@ let widgets = [
         "10",
         "11h",
         "12h",
+        "13h",
+        "14h",
+        "15h",
       ],
       color: "#6A0AC7",
     },
   },
   {
     widgetType: "chart",
-    widgetId: 6,
-    deviceId: 6,
+    widgetId: 4,
+    deviceId: 4,
     color: "#3169E6",
     widget: {
       chartType: "doughnut",
@@ -79,80 +93,73 @@ let widgets = [
   },
   {
     widgetType: "chart",
-    widgetId: 7,
-    deviceId: 7,
-    color: "#31C6E6",
+    widgetId: 100,
+    deviceId: 2,
+    color: "mixed",
     widget: {
       chartType: "line",
-      data: [10.5, 5.2],
-      dataLabels: ["Closed", "Opening", "Open", "Closing"],
-      color: "#31C6E6",
-    },
-  },
-  {
-    widgetType: "chart",
-    widgetId: 8,
-    deviceId: 8,
-    color: "purple",
-    widget: {
-      chartType: "line",
-      data: [10.5, 5.2, 2, 8],
-      dataLabels: ["Closed", "Opening", "Open", "Closing"],
-      color: "purple",
-    },
-  },
-  {
-    widgetType: "chart",
-    widgetId: 9,
-    deviceId: 9,
-    color: "teal",
-    widget: {
-      chartType: "line",
-      data: [4.35, 5.2, 6, 2],
-      dataLabels: ["Dawn", "Morning", "Noon", "Evening"],
-      color: "teal",
+      dataLabels: ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"],
+      datasets: [
+        {
+          label: "Solar Input",
+          data: [10.5, 15.2, 10, 10, -8, -10, 5, 10],
+          borderColor: "orange",
+        },
+        {
+          label: "Solar Output",
+          data: [20.35, 28.2, 21, 22, 20, 18, 15, 19],
+          borderColor: "red",
+        },
+
+        {
+          label: "Air Conditioner",
+          data: [-5.5, -10.2, 8, 16, 10, 12, 8, 13, 15],
+          borderColor: "#1172D1",
+        },
+      ],
     },
   },
 ];
+
 let devices = [
   {
-    id: 3,
+    id: 1,
     name: "Vacuum Power Usage",
     status: "online",
     value: 1,
   },
   {
-    id: 4,
+    id: 2,
     name: "Vacuum Power",
     status: "online",
     value: 1,
   },
   {
-    id: 5,
+    id: 3,
     name: "Vacuum Load",
     status: "online",
     value: 1,
   },
   {
-    id: 6,
+    id: 4,
     name: "System Overview",
     status: "online",
     value: 1,
   },
   {
-    id: 7,
-    name: "Door Activity",
+    id: 5,
+    name: "Solar Input",
     status: "online",
     value: 10.5,
   },
   {
-    id: 8,
-    name: "air conditioner",
+    id: 6,
+    name: "Air Conditioner",
     status: "online",
     value: 2.5,
   },
   {
-    id: 9,
+    id: 7,
     name: "Solar Output",
     status: "online",
     value: 4.35,
@@ -194,24 +201,25 @@ setInterval(() => {
       value: val,
     };
   });
-
   widgets = widgets.map((w) => {
-    if (w.widgetType !== "chart") return w;
-    const device = devices.find((d) => d.id === w.deviceId);
-    if (!device) return w;
-
-    const val = device.value;
-
+    if (w.widgetId !== 100) return w;
     return {
       ...w,
       widget: {
         ...w.widget,
-        data: [...w.widget.data, val],
+        datasets: w.widget.datasets.map((ds) => {
+          const device = devices.find((d) => d.name === ds.label);
+
+          return {
+            ...ds,
+            data: [...ds.data, device?.value ?? 0].slice(-20),
+          };
+        }),
       },
     };
   });
 
   io.emit("update", { devices, widgets });
-}, 3000);
+}, 5000);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

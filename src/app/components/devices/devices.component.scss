@@ -1,24 +1,34 @@
-.content_devices {
+.content_kpi {
+  margin-bottom: 20px;
+}
+.content_devices,
+.content_kpi {
   background-color: rgba(242, 243, 246);
 }
 mat-grid-tile {
   border-radius: 0.25rem;
-  // border: 1px solid rgb(156, 1, 164);
   box-shadow: 4px 4px 8px rgba(94, 1, 99, 0.35);
   background-color: white;
   overflow: hidden;
   height: 100%;
-
   mat-card {
     width: 100%;
     height: 100%;
-    margin: 1rem;
     border: none;
     box-shadow: none;
 
+    .doughnut_chart.chart_container {
+      height: 100%;
+      width: 200px;
+      canvas.doughnut_chart {
+        height: 100%;
+        padding: 1rem;
+      }
+    }
     mat-card-header {
       display: flex;
       justify-content: space-between;
+      padding: 0;
 
       mat-card-title {
         font-size: 1rem;
@@ -35,9 +45,45 @@ mat-grid-tile {
     }
     mat-card-content {
       height: 100%;
+      padding: 0;
       .device_card_value {
         font-size: 2.5rem;
       }
     }
+  }
+  .kpi_card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    .kpi_header {
+      display: flex;
+      flex-direction: column;
+    }
+    .kpi_content {
+      display: flex;
+    }
+  }
+  .device_card {
+    padding: 1rem;
+    mat-card-header {
+      padding: 1rem;
+    }
+  }
+}
+.icon_container {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgb(255, 238, 255);
+  mat-icon {
+    font-size: 24px;
+    color: purple;
+    line-height: 1;
+    display: block;
   }
 }

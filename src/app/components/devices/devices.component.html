@@ -1,38 +1,42 @@
 <div class="content_container">
+  <div class="content_kpi">
+    <mat-grid-list cols="4" rowHeight="150px" gutterSize="12px">
+      @for (kpi of kpiDevices(); track kpi.label; let i = $index) {
+        <mat-grid-tile>
+          <mat-card class="kpi_card">
+            <mat-card-header class="kpi_header">
+              <mat-card-title>{{ kpi.label }}</mat-card-title>
+              <h1>{{ kpi.value }}</h1>
+            </mat-card-header>
+            <mat-card-content class="kpi_content">
+              @if (i === 0) {
+                <div class="chart_content">
+                  <div
+                    class="doughnut_chart"
+                    style="height: 100%; width: 200px"
+                  >
+                    <app-widget [widget]="widgets()[3]"></app-widget>
+                  </div>
+                </div>
+              } @else {
+                <div class="icon_container">
+                  <mat-icon fontIcon="{{ kpi.icon }}"></mat-icon>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </mat-grid-tile>
+      }
+    </mat-grid-list>
+  </div>
   @if (devices().length !== 0) {
     <div class="content_devices">
       <mat-grid-list cols="4" rowHeight="280px" gutterSize="12px">
-        <!-- <mat-grid-tile [rowspan]="0.5">
-          <div class="box">
-            <div class="box_header">
-              <h3 class="box_title">Devices online</h3>
-            </div>
-            <h1>{{ devicesOnline() }}</h1>
-          </div>
-        </mat-grid-tile>
-        <mat-grid-tile [rowspan]="0.5">
-          <div class="box">
-            <div class="box_header">
-              <h3 class="box_title">Devices offline</h3>
-            </div>
-            <h1>{{ devices().length - devicesOnline() }}</h1>
-          </div>
-        </mat-grid-tile>
-        <mat-grid-tile [rowspan]="0.5">
-          <div class="box">
-            <div class="box_header">
-              <h3 class="box_title">Average Value</h3>
-            </div>
-            <h1>{{ devicesAvg() }}</h1>
-          </div>
-        </mat-grid-tile> -->
         @for (device of devices(); track device.id) {
-          <!-- widgetMap[device.widget.widgetType];
-    inputs: { device: device } -->
           <mat-grid-tile
             [routerLink]="['/devices', device.id]"
-            [rowspan]="layputRowspan[device.id]"
-            [colspan]="layputColumns[device.id]"
+            [rowspan]="layoutRowspan[device.id]"
+            [colspan]="layoutColumns[device.id]"
           >
             <mat-card class="device_card">
               <mat-card-header>
