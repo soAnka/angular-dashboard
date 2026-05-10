@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, of } from 'rxjs';
+import { IDevice } from '../models/idevices';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class DevicesService {
 
   getData() {
     return this.http
-      .get<any[]>(`${this.api}/api/devices`)
+      .get<IDevice[]>(`${this.api}/api/devices`)
       .pipe(catchError(() => of([])));
   }
 }

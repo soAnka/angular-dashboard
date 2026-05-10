@@ -2,27 +2,64 @@
   <div class="content_kpi">
     <mat-grid-list cols="4" rowHeight="150px" gutterSize="12px">
       @for (kpi of kpiDevices(); track kpi.label; let i = $index) {
-        <mat-grid-tile>
+        <mat-grid-tile [class.first]="i === 0">
           <mat-card class="kpi_card">
             <mat-card-header class="kpi_header">
               <mat-card-title>{{ kpi.label }}</mat-card-title>
               <h1>{{ kpi.value }}</h1>
+              @if (kpi.label === "Active" || kpi.label === "Off") {
+                @if (kpi.diff > 0 && kpi.label === "Active") {
+                  <p class="kpi_diff_plus">
+                    +{{ kpi.diff }}
+                    <mat-icon
+                      class="diff_icon diff_icon_plus material-symbols-outlined"
+                      fontIcon="arrow_upward"
+                    ></mat-icon>
+                  </p>
+                }
+                @if (kpi.diff < 0 && kpi.label === "Active") {
+                  <p class="kpi_diff_minus">
+                    -{{ kpi.diff }}
+                    <mat-icon
+                      class="diff_icon diff_icon_minus material-symbols-outlined"
+                      fontIcon="arrow_downward"
+                    ></mat-icon>
+                  </p>
+                }
+                @if (kpi.diff > 0 && kpi.label === "Off") {
+                  <p class="kpi_diff_plus">
+                    +{{ kpi.diff }}
+                    <mat-icon
+                      class="diff_icon diff_icon_plus material-symbols-outlined"
+                      fontIcon="arrow_upward"
+                    ></mat-icon>
+                  </p>
+                }
+                @if (kpi.diff < 0 && kpi.label === "Off") {
+                  <p class="kpi_diff_minus">
+                    -{{ kpi.diff }}
+                    <mat-icon
+                      class="diff_icon diff_icon_minus material-symbols-outlined"
+                      fontIcon="arrow_downward"
+                    ></mat-icon>
+                  </p>
+                }
+              } @else {}
+
+              <!-- @if (kpi.diff() !== "undefined") {
+
+              @if (kpi.diff() && (kpi.label === "Active") > 0) {
+                <p>+{{ kpi.diff() }}</p>
+              }
+              @if (kpi.diff() && (kpi.label === "Off") < 0) {
+                <p>-{{ kpi.diff() }}</p>
+              } -->
+              <!-- } -->
             </mat-card-header>
             <mat-card-content class="kpi_content">
-              @if (i === 0) {
-                <div class="chart_content">
-                  <div
-                    class="doughnut_chart"
-                    style="height: 100%; width: 200px"
-                  >
-                    <app-widget [widget]="widgets()[3]"></app-widget>
-                  </div>
-                </div>
-              } @else {
-                <div class="icon_container">
-                  <mat-icon fontIcon="{{ kpi.icon }}"></mat-icon>
-                </div>
-              }
+              <div class="icon_container">
+                <mat-icon fontIcon="{{ kpi.icon }}"></mat-icon>
+              </div>
             </mat-card-content>
           </mat-card>
         </mat-grid-tile>
@@ -34,12 +71,11 @@
       <mat-grid-list cols="4" rowHeight="280px" gutterSize="12px">
         @for (device of devices(); track device.id) {
           <mat-grid-tile
-            [routerLink]="['/devices', device.id]"
             [rowspan]="layoutRowspan[device.id]"
             [colspan]="layoutColumns[device.id]"
           >
             <mat-card class="device_card">
-              <mat-card-header>
+              <mat-card-header [routerLink]="['/devices', device.id]">
                 <mat-card-title>{{ device.name }}</mat-card-title>
                 @if (device.status) {
                   <mat-chip
@@ -50,9 +86,9 @@
                 }
               </mat-card-header>
               @for (widget of widgets(); track widget.widgetId) {
-                @if (widget.deviceId === device.id) {
+                @if (device.id === widget.deviceId) {
                   <mat-card-content>
-                    <app-widget [widget]="widget"></app-widget>
+                    <app-chart [widgetInput]="widget"></app-chart>
                   </mat-card-content>
                 }
               }

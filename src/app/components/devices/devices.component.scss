@@ -11,6 +11,7 @@ mat-grid-tile {
   background-color: white;
   overflow: hidden;
   height: 100%;
+
   mat-card {
     width: 100%;
     height: 100%;
@@ -56,34 +57,78 @@ mat-grid-tile {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 1rem;
+    .kpi_content {
+      width: 80%;
+      display: flex;
+
+      .icon_container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        mat-icon {
+          font-size: 24px;
+          color: #3807c7;
+          line-height: 1;
+          display: block;
+          position: absolute;
+          right: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 90px;
+          opacity: 0.08;
+          width: 90px;
+          height: 90px;
+        }
+      }
+    }
+
     .kpi_header {
       display: flex;
       flex-direction: column;
-    }
-    .kpi_content {
-      display: flex;
+      padding: 1rem;
+
+      .mat-icon.diff_icon_minus,
+      .kpi_diff_minus {
+        color: rgb(127, 1, 1);
+        font-size: 0.9rem;
+      }
+      .mat-icon.diff_icon_plus,
+      .kpi_diff_plus {
+        color: rgb(0, 107, 0);
+        font-size: 0.9rem;
+      }
+      .kpi_diff_minus,
+      .kpi_diff_plus {
+        position: relative;
+      }
+      .diff_icon {
+        position: absolute;
+        font-variation-settings: "wght" 400;
+        font-size: 0.9rem;
+      }
     }
   }
   .device_card {
     padding: 1rem;
     mat-card-header {
       padding: 1rem;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
-.icon_container {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: rgb(255, 238, 255);
-  mat-icon {
-    font-size: 24px;
-    color: purple;
-    line-height: 1;
-    display: block;
+.first .kpi_card {
+  background-color: #3807c7;
+  color: white;
+  .kpi_content {
+    .icon_container {
+      mat-icon {
+        color: white;
+      }
+    }
   }
 }

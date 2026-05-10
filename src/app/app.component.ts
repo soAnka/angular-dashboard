@@ -6,6 +6,7 @@ import {
   MatDrawerContainer,
   MatDrawerContent,
 } from '@angular/material/sidenav';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import {
     MatDrawer,
     MatDrawerContainer,
     MatDrawerContent,
+    SidenavComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

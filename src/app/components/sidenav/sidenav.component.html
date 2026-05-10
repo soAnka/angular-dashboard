@@ -1,0 +1,23 @@
+<mat-drawer-container class="drawer">
+  <mat-drawer class="sidenav" mode="side" opened>
+    <ul class="menu_items_container">
+      @for (menu_item of sideMenu; track menu_item) {
+        <li class="menu_item">
+          <mat-icon
+            class="menu_icon material-symbols-outlined"
+            fontIcon="{{ menu_item.icon }}"
+          ></mat-icon
+          >{{ menu_item.name }}
+        </li>
+      }
+    </ul>
+    <div class="get_support">
+      <p>Need help?</p>
+      <p>Feel free to contact</p>
+      <button>Get support</button>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

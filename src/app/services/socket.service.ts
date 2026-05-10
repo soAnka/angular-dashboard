@@ -1,12 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { IDevice } from '../models/idevices';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
   private socket!: Socket;
-  devices = signal<any[]>([]);
+  devices = signal<IDevice[]>([]);
   widgets = signal<any[]>([]);
 
   connect(): void {

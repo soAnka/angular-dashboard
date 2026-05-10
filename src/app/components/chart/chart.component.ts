@@ -8,8 +8,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
-import { BaseWidget, IWidgetChart } from 'src/app/models/idevices';
+import { BaseWidget, DataSet } from 'src/app/models/idevices';
 import { SocketService } from 'src/app/services/socket.service';
+import { barGradient, lineGradient } from 'src/app/utils/chart.utils';
 
 Chart.register(...registerables);
 
@@ -21,143 +22,91 @@ Chart.register(...registerables);
   styleUrl: './chart.component.scss',
 })
 export class ChartComponent {
-  state = inject(SocketService);
-  widgets: BaseWidget[] = this.state.widgets();
+  private socket = inject(SocketService);
+  widgets: BaseWidget[] = this.socket.widgets();
   chart!: Chart;
-  @Input() widgetID!: number;
-  @Input() name: string = '';
+  @Input() widgetInput!: BaseWidget;
 
   @ViewChild('chartCanvas') canvas!: ElementRef<HTMLCanvasElement>;
-  widget = computed(() =>
-    this.state
-      .widgets()
-      .find((w) => String(w.widgetId) === String(this.widgetID)),
-  );
 
-  constructor(private socket: SocketService) {
+  widget = computed(() =>
+    this.socket
+      .widgets()
+      .find((w) => String(w.widgetId) === String(this.widgetInput.widgetId)),
+  );
+  constructor() {
     effect(() => {
-      const w = this.widget();
-      console.log('single widget data ', w.widget.data);
-      if (this.widget().widget.chartType === 'doughnut') {
-        this.chart.data = {
-          labels: ['Online', 'Offline', 'All'],
-          datasets: [
-            {
-              data: [
-                this.doughnutwidgetsData()[0],
-                this.doughnutwidgetsData()[1],
-                this.socket.devices().length,
-              ],
-              backgroundColor: ['#83CA33', '#CBCBCB'],
-              borderColor: ['#83CA33', '#CBCBCB'],
-            },
-          ],
-        };
-        this.chart.update('active');
-        return;
-      }
-      this.updateChart(w);
+      this.widget().widget.datasets.forEach(
+        (dataset: DataSet, index: number) => {
+          this.chart.data.datasets[index].data = dataset.data;
+        },
+      );
+      this.chart.update('none');
     });
   }
-  doughnutwidgetsData = computed(() => {
-    const devices = this.socket.devices();
-    return [
-      devices.filter((d) => d.status === 'online').length,
-      devices.filter((d) => d.status === 'offline').length,
-    ];
-  });
+
+  ngOnInit() {}
   ngAfterViewInit() {
-    if (!this.widget()) return;
-    const isLineChart = this.widget().widget.chartType === 'line';
-    const isDoughnut =
-      this.widget().widget.chartType === 'doughnut' ? true : false;
-    const isBar = this.widget().widget.chartType === 'bar' ? true : false;
+    this.createChart();
+    this.updateChart();
+  }
+
+  private createChart() {
     this.chart = new Chart(this.canvas.nativeElement, {
-      type: isLineChart ? 'line' : this.widget().widget.chartType,
+      type: this.widget().widget.chartType,
       data: {
         labels: this.widget().widget.dataLabels,
-        datasets: this.widget().widget.datasets
-          ? this.widget().widget.datasets
-          : [
-              {
-                label: 'Todo',
-                backgroundColor: this.widget().color,
-                data: this.widget().widget.data,
-                borderWidth: 1,
-                borderColor: this.widget().color,
-                borderRadius: 1,
-                pointRadius: isLineChart ? 2 : 0,
-                pointHoverRadius: isLineChart ? 2 : 0,
-                pointBackgroundColor: isLineChart
-                  ? this.widget().color
-                  : undefined,
-              },
-            ],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
-        barPercentage: isBar ? 0.25 : 0,
-        borderRadius: isBar ? 15 : 0,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        elements: {
-          point: {
-            radius: isLineChart ? 1 : 0,
-          },
+        maintainAspectRatio: true,
+        devicePixelRatio: window.devicePixelRatio,
+        barPercentage: this.widget().widget.chartType === 'bar' ? 0.25 : 0,
+        borderRadius: this.widget().widget.chartType === 'bar' ? 15 : 0,
+        animation: {
+          easing: 'linear',
+          duration: 300,
         },
         scales: {
-          x: {
-            display: !isDoughnut,
-            min: 0,
-            max: 20,
-            grid: {
-              display: !isDoughnut,
-            },
-          },
           y: {
-            display: !isDoughnut,
             min: -30,
             max: 30,
-            beginAtZero: true,
             grid: {
-              display: !isDoughnut,
+              // color:
+              display: false,
+            },
+          },
+          x: {
+            grid: {
+              color: 'rgba(0,0,0,0.1)',
             },
           },
         },
       },
     });
   }
-  updateChart(w: BaseWidget | IWidgetChart) {
-    if (!w || !this.chart) return;
+  private updateChart() {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    const w = this.widget().widget;
 
-    this.chart.data.labels = w.widget.dataLabels;
+    if (!ctx) return;
 
-    if (w.widget.datasets) {
-      this.chart.data.datasets = w.widget.datasets.map((ds: any) => ({
-        label: ds.label,
-        data: ds.data,
-        borderWidth: 1,
-        borderColor: ds.borderColor,
-        backgroundColor: ds.borderColor,
-        fill: false,
-      }));
-    } else {
-      if (!this.chart.data.datasets.length) return;
-      const ds = this.chart.data.datasets[0];
-      ds.data = w.widget.data;
-      ds.borderWidth = 1;
-      ds.borderColor = w.color;
-      ds.backgroundColor = w.color;
-      if (w.widget.chartType === 'bar') {
-        ds.backgroundColor = w.color;
-        ds.data = [...w.widget.data];
-        this.chart.data.labels = w.widget.dataLabels;
-      }
-    }
+    this.chart.data.datasets = w.datasets.map((d: DataSet) => ({
+      ...d,
+      label: d.label,
+      backgroundColor: d.label === 'Vacuum Load' ? barGradient : d.color,
+      borderColor: d.label === 'Vacuum Power Usage' ? lineGradient : d.color,
+      tension: d.label === 'Vacuum Power Usage' ? 0.25 : 0,
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      borderWidth: d.label === 'Vacuum Power Usage' ? 2 : 1,
+      borderSkipped: false,
+    }));
     this.chart.update();
   }
 }
