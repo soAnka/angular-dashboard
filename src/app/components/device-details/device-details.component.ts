@@ -4,6 +4,7 @@ import { DevicesService } from 'src/app/services/devices.service';
 import { SharedStateService } from 'src/app/services/shared-state.service';
 import { Chart, registerables } from 'chart.js';
 import { IDevice } from 'src/app/models/idevices';
+import { SocketService } from 'src/app/services/socket.service';
 Chart.register(...registerables);
 
 @Component({
@@ -15,14 +16,14 @@ Chart.register(...registerables);
 })
 export class DeviceDetailsComponent {
   state = inject(SharedStateService);
-  devices = this.state.devices;
+  devices = this.socket.devices();
   deviceDetails = signal<IDevice | null>(null);
   chart!: Chart;
   history = [];
 
   constructor(
     private route: ActivatedRoute,
-    api: DevicesService,
+    private socket: SocketService,
   ) {
     effect(() => {
       const d = this.device();
@@ -34,9 +35,7 @@ export class DeviceDetailsComponent {
     });
   }
   getDeviceId = Number(this.route.snapshot.paramMap.get('id'));
-  device = computed(() =>
-    this.devices().find((d) => d.id === this.getDeviceId),
-  );
+  device = computed(() => this.devices.find((d) => d.id === this.getDeviceId));
 
   ngAfterViewInit() {
     this.chart = new Chart('chart', {

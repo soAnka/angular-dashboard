@@ -140,7 +140,11 @@ io.on("connection", (socket) => {
 
 setInterval(() => {
   devices = devices.map((d) => {
-    let newVal = d.value + (Math.floor(Math.random() * 10) + 1);
+    let newVal;
+    if (newVal > 300) {
+      newVal = 0;
+    }
+    newVal = d.value + (Math.floor(Math.random() * 10) + 1);
     const mr = Math.random();
     if (d.status === "offline") {
       if (mr < 0.6) d.status = "online";
@@ -174,6 +178,6 @@ setInterval(() => {
   });
 
   io.emit("update", { devices, widgets });
-}, 600000);
+}, 5000);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

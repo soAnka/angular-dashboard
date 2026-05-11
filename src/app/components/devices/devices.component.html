@@ -1,6 +1,6 @@
 <div class="content_container">
   <div class="content_kpi">
-    <mat-grid-list cols="4" rowHeight="150px" gutterSize="12px">
+    <mat-grid-list cols="4" rowHeight="125px" gutterSize="12px">
       @for (kpi of kpiDevices(); track kpi.label; let i = $index) {
         <mat-grid-tile [class.first]="i === 0">
           <mat-card class="kpi_card">
@@ -96,6 +96,7 @@
           </mat-grid-tile>
         }
       </mat-grid-list>
+      <app-table></app-table>
     </div>
   }
 </div>

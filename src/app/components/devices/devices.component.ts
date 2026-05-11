@@ -14,6 +14,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { JsonPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { IDevice } from 'src/app/models/idevices';
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-devices',
@@ -31,6 +32,7 @@ import { IDevice } from 'src/app/models/idevices';
     JsonPipe,
     MatIconModule,
     ChartComponent,
+    TableComponent,
   ],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss',
