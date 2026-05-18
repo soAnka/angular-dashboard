@@ -29,3 +29,28 @@ body {
     "GRAD" 0,
     "opsz" 24;
 }
+
+.mat-mdc-tooltip {
+  --mdc-plain-tooltip-container-color: #ff7300 !important;
+  --mdc-plain-tooltip-supporting-text-color: #ffffff;
+  --mdc-plain-tooltip-container-position: "right";
+  --mdc-plain-tooltip-supporting-text-line-height: 1rem;
+  --mdc-plain-tooltip-supporting-text-tracking: 0.02rem
+    --mdc-plain-tooltip-container-shape: 20px;
+}
+
+.vacuum_pow_us {
+  --mdc-plain-tooltip-container-color: #26c8de !important;
+}
+.air_con {
+  --mdc-plain-tooltip-container-color: #1172d1 !important;
+}
+.solar_inp {
+  --mdc-plain-tooltip-container-color: #ff7300 !important;
+}
+.solar_out {
+  --mdc-plain-tooltip-container-color: #cb2454 !important;
+}
+.vacuum_loa {
+  --mdc-plain-tooltip-container-color: #b925ff !important;
+}

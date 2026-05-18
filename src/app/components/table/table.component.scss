@@ -2,3 +2,50 @@
   margin-top: 20px;
   box-shadow: 4px 4px 8px rgba(94, 1, 99, 0.35);
 }
+
+table td span {
+  &:hover {
+    cursor: pointer;
+  }
+}
+.mat-mdc-tooltip {
+  --mdc-plain-tooltip-container-color: #ff7300 !important;
+}
+
+.table_inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.table_inner_name {
+  color: #282828;
+  font-weight: lighter;
+  margin-left: 1rem;
+}
+.table_inner_name.value,
+.table_inner_name.trend {
+  margin-left: 0;
+}
+.table_inner_name.value {
+  width: 100%;
+  max-width: 30px;
+  text-align: right;
+  &:hover {
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+.trend_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin: 2px;
+}
+.trend_icon.plus {
+  color: #18bd2c;
+  font-size: 1.5rem;
+}
+.trend_icon.minus {
+  color: rgb(127, 1, 1);
+}

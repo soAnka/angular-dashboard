@@ -2,12 +2,19 @@
   <mat-drawer class="sidenav" mode="side" opened>
     <ul class="menu_items_container">
       @for (menu_item of sideMenu; track menu_item) {
-        <li class="menu_item">
+        <li
+          class="menu_item"
+          [class.logo]="menu_item.name === 'Smart Home'"
+          routerLinkActive="active_link"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
           <mat-icon
             class="menu_icon material-symbols-outlined"
             fontIcon="{{ menu_item.icon }}"
-          ></mat-icon
-          >{{ menu_item.name }}
+          ></mat-icon>
+          <a [routerLink]="['/', menu_item.path]">
+            {{ menu_item.name }}
+          </a>
         </li>
       }
     </ul>

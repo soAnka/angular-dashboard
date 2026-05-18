@@ -14,6 +14,7 @@ export type BaseWidget = {
   widgetId: number;
   deviceId: number;
   color: string;
+  className: string;
   widget: IWidgetChart;
 };
 

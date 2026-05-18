@@ -5,7 +5,7 @@ import {
   MatDrawerContainer,
   MatDrawerContent,
 } from '@angular/material/sidenav';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -16,17 +16,19 @@ import { RouterOutlet } from '@angular/router';
     MatDrawerContent,
     MatIcon,
     RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {
   sideMenu = [
-    { name: 'Smart Home', icon: 'nest_secure_alarm' },
-    { name: 'Dashboard', icon: 'dashboard_2' },
-    { name: 'Devices', icon: 'monitoring' },
-    { name: 'Analytics', icon: 'analytics' },
-    { name: 'Alerts', icon: 'monitoring' },
-    { name: 'Settings', icon: 'settings' },
+    { name: 'Smart Home', icon: 'nest_secure_alarm', path: 'info' },
+    { name: 'Dashboard', icon: 'dashboard_2', path: 'devices' },
+    { name: 'Devices', icon: 'monitoring', path: 'info' },
+    { name: 'Analytics', icon: 'analytics', path: 'info' },
+    { name: 'Alerts', icon: 'monitoring', path: 'info' },
+    { name: 'Settings', icon: 'settings', path: 'info' },
   ];
 }

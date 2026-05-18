@@ -13,34 +13,66 @@
       justify-content: space-between;
     }
     .menu_item {
+      width: 100%;
+      max-width: 125px;
       padding: 1rem;
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      font-size: 0.9rem;
+      border-radius: 2rem;
+      margin-bottom: 0.55rem;
+      &:hover {
+        background-color: #3806c7;
+        font-weight: 400;
+        cursor: pointer;
+        a {
+          color: white;
+        }
+        mat-icon.menu_icon {
+          color: white;
+          font-variation-settings: "wght" 400;
+        }
+      }
+
+      &.logo {
+        max-width: 200px;
+      }
+      &.active_link {
+        background-color: #3807c7;
+        color: white;
+        a {
+          color: white;
+        }
+        mat-icon.menu_icon {
+          font-variation-settings: "wght" 300;
+        }
+      }
+      a {
+        color: black;
+        text-decoration: none;
+      }
+
       .menu_icon,
       .material-symbols-outlined {
         padding-right: 0.25rem;
         font-variation-settings: "wght" 200;
-        font-size: 22px;
+        font-size: 1.35rem;
         line-height: 1;
       }
     }
     .menu_item:first-child {
-      margin-top: 1.5rem;
+      margin-bottom: 2rem;
       color: rgb(107, 0, 189);
       font-size: 28px;
       font-size: 1.5rem;
       font-weight: 500;
-      .menu_icon {
-        font-size: 1.55rem;
-        font-variation-settings: "wght" 400;
-      }
     }
   }
   .get_support {
     width: 100%;
     max-width: 200px;
-    height: 200px;
+    height: 20%;
     background-color: #dae2ff;
     padding: 1rem;
     border-radius: 25px;

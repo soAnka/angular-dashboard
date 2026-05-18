@@ -1,0 +1,13 @@
+@if (kpi.label === "Active" || kpi.label === "Off") {
+  @if (kpi.diff !== 0) {
+    <p [class]="kpi.diff > 0 ? 'kpi_diff_plus' : 'kpi_diff_minus'">
+      {{ kpi.diff > 0 ? "+" : "-" }}{{ getAbs(kpi.diff) }}
+      <mat-icon
+        class="diff_icon material-symbols-outlined"
+        [class.diff_icon_plus]="kpi.diff > 0"
+        [class.diff_icon_minus]="kpi.diff < 0"
+        [fontIcon]="kpi.diff > 0 ? 'arrow_upward' : 'arrow_downward'"
+      ></mat-icon>
+    </p>
+  }
+}

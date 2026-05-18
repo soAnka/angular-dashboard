@@ -1,28 +1,70 @@
-<table
-  mat-table
-  [dataSource]="devices()"
-  class="mat-elevation-z8 table_summary"
->
+<table mat-table [dataSource]="tData()" class="mat-elevation-z8 table_summary">
   <ng-container matColumnDef="device">
     <th mat-header-cell *matHeaderCellDef>Device</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    <td mat-cell *matCellDef="let element">
+      <div class="table_device_name">{{ element.name }}</div>
+      @if (element.tableSummary.length > 1) {
+        <div class="table_inner">
+          @for (item of element.tableSummary; track item) {
+            <div class="table_inner_name">{{ item.label }}</div>
+          }
+        </div>
+      }
+    </td>
   </ng-container>
   <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef>Status</th>
-    <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+    <td mat-cell *matCellDef="let element">
+      <app-status [status]="element.status"></app-status>
+    </td>
   </ng-container>
-  <!-- TODO: type, current, trend update -->
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell *matCellDef="let element">chart</td>
   </ng-container>
   <ng-container matColumnDef="current">
     <th mat-header-cell *matHeaderCellDef>Current</th>
-    <td mat-cell *matCellDef="let element">12</td>
+    <td mat-cell *matCellDef="let element">
+      <div class="table_inner">
+        @for (item of element.tableSummary; track item) {
+          <div
+            class="table_inner_name value"
+            [matTooltip]="item.label"
+            [matTooltipClass]="item.className"
+            matTooltipPosition="right"
+          >
+            {{ item.value }}
+          </div>
+        }
+      </div>
+    </td>
   </ng-container>
   <ng-container matColumnDef="trend">
     <th mat-header-cell *matHeaderCellDef>Trend</th>
-    <td mat-cell *matCellDef="let element">+</td>
+    <td mat-cell *matCellDef="let element">
+      <div class="table_inner">
+        @for (summary of element.tableSummary; track summary.label) {
+          <div class="table_inner_name trend">
+            @if (summary.trend === "plus") {
+              <mat-icon
+                class="trend_icon plus material-symbols-outlined"
+                fontIcon="trending_up"
+              ></mat-icon>
+            } @else if (summary.trend === "minus") {
+              <mat-icon
+                class="trend_icon minus material-symbols-outlined"
+                fontIcon="trending_down"
+              ></mat-icon>
+            } @else {
+              <mat-icon
+                class="trend_icon stable material-symbols-outlined"
+                fontIcon="trending_flat"
+              ></mat-icon>
+            }
+          </div>
+        }
+      </div>
+    </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

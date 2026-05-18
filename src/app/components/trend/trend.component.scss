@@ -1,0 +1,19 @@
+.mat-icon.diff_icon_minus,
+.kpi_diff_minus {
+  color: rgb(127, 1, 1);
+  font-size: 0.9rem;
+}
+.mat-icon.diff_icon_plus,
+.kpi_diff_plus {
+  color: rgb(0, 107, 0);
+  font-size: 0.9rem;
+}
+.kpi_diff_minus,
+.kpi_diff_plus {
+  position: relative;
+}
+.diff_icon {
+  position: absolute;
+  font-variation-settings: "wght" 400;
+  font-size: 0.9rem;
+}

@@ -8,53 +8,8 @@
               <mat-card-title>{{ kpi.label }}</mat-card-title>
               <h1>{{ kpi.value }}</h1>
               @if (kpi.label === "Active" || kpi.label === "Off") {
-                @if (kpi.diff > 0 && kpi.label === "Active") {
-                  <p class="kpi_diff_plus">
-                    +{{ kpi.diff }}
-                    <mat-icon
-                      class="diff_icon diff_icon_plus material-symbols-outlined"
-                      fontIcon="arrow_upward"
-                    ></mat-icon>
-                  </p>
-                }
-                @if (kpi.diff < 0 && kpi.label === "Active") {
-                  <p class="kpi_diff_minus">
-                    -{{ kpi.diff }}
-                    <mat-icon
-                      class="diff_icon diff_icon_minus material-symbols-outlined"
-                      fontIcon="arrow_downward"
-                    ></mat-icon>
-                  </p>
-                }
-                @if (kpi.diff > 0 && kpi.label === "Off") {
-                  <p class="kpi_diff_plus">
-                    +{{ kpi.diff }}
-                    <mat-icon
-                      class="diff_icon diff_icon_plus material-symbols-outlined"
-                      fontIcon="arrow_upward"
-                    ></mat-icon>
-                  </p>
-                }
-                @if (kpi.diff < 0 && kpi.label === "Off") {
-                  <p class="kpi_diff_minus">
-                    -{{ kpi.diff }}
-                    <mat-icon
-                      class="diff_icon diff_icon_minus material-symbols-outlined"
-                      fontIcon="arrow_downward"
-                    ></mat-icon>
-                  </p>
-                }
-              } @else {}
-
-              <!-- @if (kpi.diff() !== "undefined") {
-
-              @if (kpi.diff() && (kpi.label === "Active") > 0) {
-                <p>+{{ kpi.diff() }}</p>
+                <app-trend [kpi]="kpi"></app-trend>
               }
-              @if (kpi.diff() && (kpi.label === "Off") < 0) {
-                <p>-{{ kpi.diff() }}</p>
-              } -->
-              <!-- } -->
             </mat-card-header>
             <mat-card-content class="kpi_content">
               <div class="icon_container">
@@ -77,13 +32,7 @@
             <mat-card class="device_card">
               <mat-card-header [routerLink]="['/devices', device.id]">
                 <mat-card-title>{{ device.name }}</mat-card-title>
-                @if (device.status) {
-                  <mat-chip
-                    [class.online]="device.status === 'online'"
-                    [class.offline]="device.status !== 'online'"
-                    >{{ device.status }}</mat-chip
-                  >
-                }
+                <app-status [status]="device.status"></app-status>
               </mat-card-header>
               @for (widget of widgets(); track widget.widgetId) {
                 @if (device.id === widget.deviceId) {

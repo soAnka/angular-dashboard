@@ -29,6 +29,7 @@ let widgets = [
           label: "Vacuum Power Usage",
           data: [-10, 18, 2, 22],
           color: "#26C8DE",
+          className: "vacuum_pow_us",
         },
       ],
     },
@@ -47,12 +48,14 @@ let widgets = [
           label: "Solar Input",
           data: [10, 12, 10, 13, 15, 9, 12, 11],
           color: "orange",
+          className: "solar_inp",
         },
         {
           deviceId: 2,
           label: "Solar Output",
           data: [15, 18, 21, 19, 16, 13, 15, 16],
-          color: "red",
+          color: "#CB2454",
+          className: "solar_out",
         },
 
         {
@@ -60,6 +63,7 @@ let widgets = [
           label: "Air Conditioner",
           data: [-5, -10, -8, -11, -10, -12, -8, -11],
           color: "#1172D1",
+          className: "air_con",
         },
       ],
     },
@@ -79,6 +83,7 @@ let widgets = [
             -15, -18, -23, 18, -20, 10, 20, 20, 15, -18, 10, -15, 12, 15, -8,
           ],
           color: "#B925FF",
+          className: "vacuum_loa",
         },
       ],
       dataLabels: [
@@ -113,7 +118,7 @@ let devices = [
     id: 2,
     name: "Energy Flow Overview",
     status: "online",
-    value: 12,
+    value: 4,
   },
   {
     id: 3,
@@ -140,11 +145,7 @@ io.on("connection", (socket) => {
 
 setInterval(() => {
   devices = devices.map((d) => {
-    let newVal;
-    if (newVal > 300) {
-      newVal = 0;
-    }
-    newVal = d.value + (Math.floor(Math.random() * 10) + 1);
+    const newVal = Math.floor(Math.random() * 10) + 1;
     const mr = Math.random();
     if (d.status === "offline") {
       if (mr < 0.6) d.status = "online";
@@ -159,7 +160,7 @@ setInterval(() => {
     };
   });
   widgets = widgets.map((w) => {
-    const deviceStatus = devices.find((d) => d.id === w.deviceId);
+    const device = devices.find((d) => d.id === w.deviceId);
     if (!w.widget.datasets) return w;
 
     return {
@@ -169,7 +170,7 @@ setInterval(() => {
         datasets: w.widget.datasets.map((dataset) => ({
           ...dataset,
           data:
-            deviceStatus.status === "online"
+            device.status === "online"
               ? [...dataset.data.slice(1), Math.floor(Math.random() * 12) + 1]
               : [...dataset.data],
         })),
@@ -178,6 +179,6 @@ setInterval(() => {
   });
 
   io.emit("update", { devices, widgets });
-}, 5000);
+}, 2000);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

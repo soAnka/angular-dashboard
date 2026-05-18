@@ -21,6 +21,8 @@ export class DeviceDetailsComponent {
   chart!: Chart;
   history = [];
 
+  // TODO : Details after changes in architecture.
+
   constructor(
     private route: ActivatedRoute,
     private socket: SocketService,
